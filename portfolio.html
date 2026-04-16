@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nitesh Kakde — Professional Video Editor</title>
+  <meta name="description" content="Premium video editing services — cinematic edits, reels, YouTube content, motion graphics & color grading.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: { 900: '#0a0a0f', 800: '#0f0f18', 700: '#14141f', 600: '#1a1a28', 500: '#222233' },
+            neon: { purple: '#8b5cf6', blue: '#3b82f6', pink: '#a855f7', cyan: '#06b6d4' },
+            glass: { light: 'rgba(255,255,255,0.06)', medium: 'rgba(255,255,255,0.08)', heavy: 'rgba(255,255,255,0.12)' }
+          },
+          fontFamily: {
+            display: ['Syne', 'sans-serif'],
+            body: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    ::selection { background: rgba(139,92,246,0.4); color: #fff; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0a0f; }
+    ::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 3px; }
+    body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: #e2e8f0; overflow-x: hidden; cursor: none; }
+
+    /* Loading Screen */
+    #loader { position: fixed; inset: 0; z-index: 9999; background: #0a0a0f; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s, visibility 0.6s; }
+    #loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .loader-logo { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: pulse-glow 1.5s ease-in-out infinite; }
+    .loader-bar { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 2rem; border-radius: 2px; overflow: hidden; }
+    .loader-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #8b5cf6, #3b82f6); border-radius: 2px; animation: load-fill 2s ease-out forwards; }
+    @keyframes load-fill { 0%{width:0%} 50%{width:70%} 100%{width:100%} }
+    @keyframes pulse-glow { 0%,100%{opacity:1;filter:drop-shadow(0 0 10px rgba(139,92,246,0.5))} 50%{opacity:0.7;filter:drop-shadow(0 0 20px rgba(139,92,246,0.8))} }
+
+    /* Custom Cursor */
+    .cursor-dot { position: fixed; width: 6px; height: 6px; background: #fff; border-radius: 50%; pointer-events: none; z-index: 9998; transition: transform 0.1s; mix-blend-mode: difference; }
+    .cursor-ring { position: fixed; width: 40px; height: 40px; border: 1.5px solid rgba(139,92,246,0.6); border-radius: 50%; pointer-events: none; z-index: 9997; transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
+    .cursor-ring.hovering { width: 60px; height: 60px; border-color: rgba(139,92,246,0.9); background: rgba(139,92,246,0.1); }
+
+    /* Film Grain Overlay */
+    .grain-overlay { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.03; }
+    .grain-overlay::after { content: ''; position: absolute; inset: -200%; width: 400%; height: 400%; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); animation: grain 0.5s steps(6) infinite; }
+    @keyframes grain { 0%,100%{transform:translate(0,0)} 10%{transform:translate(-5%,-10%)} 20%{transform:translate(-15%,5%)} 30%{transform:translate(7%,-25%)} 40%{transform:translate(-5%,25%)} 50%{transform:translate(-15%,10%)} 60%{transform:translate(15%,0%)} 70%{transform:translate(0%,15%)} 80%{transform:translate(3%,35%)} 90%{transform:translate(-10%,10%)} }
+
+    /* Glassmorphism */
+    .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+    .glass-strong { background: rgba(255,255,255,0.08); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.12); }
+
+    /* Neon Text */
+    .neon-text { background: linear-gradient(135deg, #8b5cf6, #3b82f6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .neon-text-warm { background: linear-gradient(135deg, #a855f7, #ec4899, #f43f5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* Neon Glow */
+    .neon-glow { box-shadow: 0 0 20px rgba(139,92,246,0.3), 0 0 60px rgba(139,92,246,0.1); }
+    .neon-glow-blue { box-shadow: 0 0 20px rgba(59,130,246,0.3), 0 0 60px rgba(59,130,246,0.1); }
+    .neon-border { border: 1px solid transparent; background-image: linear-gradient(#14141f, #14141f), linear-gradient(135deg, #8b5cf6, #3b82f6); background-origin: border-box; background-clip: padding-box, border-box; }
+
+    /* Hero Canvas */
+    #hero-canvas { position: absolute; inset: 0; z-index: 0; }
+
+    /* Scroll Reveal */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* Portfolio Grid */
+    .portfolio-item { position: relative; overflow: hidden; border-radius: 12px; cursor: pointer; }
+    .portfolio-item img { transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.7s; }
+    .portfolio-item:hover img { transform: scale(1.08); filter: brightness(0.6); }
+    .portfolio-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem; opacity: 0; transition: opacity 0.5s; background: linear-gradient(to top, rgba(10,10,15,0.9) 0%, transparent 60%); }
+    .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+    .play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); width: 60px; height: 60px; border-radius: 50%; background: rgba(139,92,246,0.9); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s, transform 0.4s; }
+    .portfolio-item:hover .play-btn { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+    /* Modal */
+    #modal { position: fixed; inset: 0; z-index: 9000; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s; }
+    #modal.open { opacity: 1; visibility: visible; }
+    .modal-content { max-width: 900px; width: 92%; max-height: 90vh; overflow-y: auto; border-radius: 20px; transform: translateY(30px) scale(0.95); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    #modal.open .modal-content { transform: translateY(0) scale(1); }
+
+    /* Skill Bar */
+    .skill-bar { height: 4px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+    .skill-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #8b5cf6, #3b82f6); width: 0%; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+    .skill-fill.animate { width: var(--skill-level); }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 9500; padding: 1rem 1.5rem; border-radius: 12px; transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* Filter Button */
+    .filter-btn { position: relative; padding: 0.5rem 1.25rem; border-radius: 100px; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #94a3b8; }
+    .filter-btn.active, .filter-btn:hover { border-color: #8b5cf6; color: #fff; background: rgba(139,92,246,0.15); box-shadow: 0 0 20px rgba(139,92,246,0.2); }
+
+    /* Floating Orbs */
+    .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; pointer-events: none; }
+
+    /* Service Card Hover */
+    .service-card { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s; }
+    .service-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(139,92,246,0.15); }
+
+    /* Testimonial Card */
+    .testimonial-card { transition: transform 0.4s, border-color 0.4s; }
+    .testimonial-card:hover { transform: translateY(-4px); border-color: rgba(139,92,246,0.3); }
+
+    /* Mobile cursor fix */
+    @media (max-width: 768px) {
+      .cursor-dot, .cursor-ring { display: none !important; }
+      body { cursor: auto; }
+    }
+
+    /* Line separator */
+    .line-glow { height: 1px; background: linear-gradient(90deg, transparent, rgba(139,92,246,0.5), rgba(59,130,246,0.5), transparent); }
+
+    /* Marquee */
+    @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .marquee-track { animation: marquee 30s linear infinite; }
+    .marquee-track:hover { animation-play-state: paused; }
+
+    /* Music button */
+    .music-btn { position: fixed; bottom: 2rem; left: 2rem; z-index: 8000; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+    .music-btn:hover { box-shadow: 0 0 20px rgba(139,92,246,0.4); }
+    .music-bars { display: flex; gap: 2px; align-items: flex-end; height: 16px; }
+    .music-bar { width: 3px; background: #8b5cf6; border-radius: 2px; transition: height 0.3s; }
+    .music-playing .music-bar:nth-child(1) { animation: music-bounce 0.6s ease-in-out infinite alternate; }
+    .music-playing .music-bar:nth-child(2) { animation: music-bounce 0.6s ease-in-out 0.15s infinite alternate; }
+    .music-playing .music-bar:nth-child(3) { animation: music-bounce 0.6s ease-in-out 0.3s infinite alternate; }
+    .music-playing .music-bar:nth-child(4) { animation: music-bounce 0.6s ease-in-out 0.1s infinite alternate; }
+    @keyframes music-bounce { 0%{height:4px} 100%{height:16px} }
+
+    /* Nav link underline */
+    .nav-link { position: relative; }
+    .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:1px; background:linear-gradient(90deg,#8b5cf6,#3b82f6); transition:width 0.3s; }
+    .nav-link:hover::after, .nav-link.active::after { width:100%; }
+
+    /* Stat counter */
+    .stat-number { font-variant-numeric: tabular-nums; }
+
+    /* Input focus */
+    input:focus, textarea:focus, select:focus { outline: none; border-color: #8b5cf6 !important; box-shadow: 0 0 0 3px rgba(139,92,246,0.15); }
+
+    /* Horizontal scroll for mobile portfolio */
+    @media (max-width: 768px) {
+      .portfolio-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; gap: 1rem; padding-bottom: 1rem; }
+      .portfolio-grid > div { min-width: 85%; scroll-snap-align: start; flex-shrink: 0; }
+    }
+    .video-container {
+  position: relative;
+  width: 100%;
+  padding-top: 31.5%;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+#modal video {
+  width: 100%;
+  height: 100%;
+  max-height: 80vh;
+  object-fit: contain; /* 🔥 THIS FIXES RATIO */
+}
+  </style>
+</head>
+
+<body class="antialiased">
+
+  <!-- Loading Screen -->
+  <div id="loader">
+    <div class="loader-logo">Nitesh Kakde</div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+    <p class="mt-4 text-xs tracking-[0.3em] uppercase text-zinc-500">Loading experience</p>
+  </div>
+
+  <!-- Film Grain -->
+  <div class="grain-overlay"></div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Music Toggle -->
+  <button class="music-btn glass" id="musicBtn" aria-label="Toggle background music">
+    <div class="music-bars" id="musicBars">
+      <div class="music-bar" style="height:4px"></div>
+      <div class="music-bar" style="height:8px"></div>
+      <div class="music-bar" style="height:12px"></div>
+      <div class="music-bar" style="height:6px"></div>
+    </div>
+  </button>
+
+  <!-- Navigation -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-[8000] transition-all duration-500">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <a href="#hero" class="font-display font-800 text-xl neon-text tracking-tight">NK.</a>
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#about" class="nav-link text-sm font-medium text-zinc-400 hover:text-white transition-colors">About</a>
+          <a href="#portfolio" class="nav-link text-sm font-medium text-zinc-400 hover:text-white transition-colors">Work</a>
+          <a href="#services" class="nav-link text-sm font-medium text-zinc-400 hover:text-white transition-colors">Services</a>
+          <a href="#testimonials" class="nav-link text-sm font-medium text-zinc-400 hover:text-white transition-colors">Reviews</a>
+          <a href="#contact" class="ml-4 px-5 py-2.5 text-sm font-semibold rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all duration-300">Hire Me</a>
+        </div>
+        <button id="mobileMenuBtn" class="md:hidden text-white" aria-label="Open menu">
+          <iconify-icon icon="lucide:menu" width="24"></iconify-icon>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden fixed inset-0 top-0 bg-dark-900/95 backdrop-blur-xl z-[8001] flex flex-col items-center justify-center gap-8 opacity-0 invisible transition-all duration-300">
+      <button id="mobileMenuClose" class="absolute top-6 right-6 text-white" aria-label="Close menu">
+        <iconify-icon icon="lucide:x" width="28"></iconify-icon>
+      </button>
+      <a href="#about" class="mobile-nav-link text-2xl font-display font-600 text-white hover:text-neon-purple transition-colors">About</a>
+      <a href="#portfolio" class="mobile-nav-link text-2xl font-display font-600 text-white hover:text-neon-purple transition-colors">Work</a>
+      <a href="#services" class="mobile-nav-link text-2xl font-display font-600 text-white hover:text-neon-purple transition-colors">Services</a>
+      <a href="#testimonials" class="mobile-nav-link text-2xl font-display font-600 text-white hover:text-neon-purple transition-colors">Reviews</a>
+      <a href="#contact" class="mobile-nav-link mt-4 px-8 py-3 text-lg font-semibold rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white">Hire Me</a>
+    </div>
+  </nav>
+
+  <!-- ==================== HERO ==================== -->
+  <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <canvas id="hero-canvas"></canvas>
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-b from-dark-900/60 via-dark-900/40 to-dark-900 z-[1]"></div>
+    <!-- Orbs -->
+    <div class="orb w-[500px] h-[500px] bg-neon-purple top-[-10%] left-[-10%] z-0" style="opacity:0.08"></div>
+    <div class="orb w-[400px] h-[400px] bg-neon-blue bottom-[-10%] right-[-10%] z-0" style="opacity:0.06"></div>
+
+    <div class="relative z-[2] text-center px-6 max-w-5xl mx-auto">
+      <div class="reveal">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-neon-purple mb-6">Video Editor & Motion Designer</p>
+      </div>
+      <h1 class="reveal reveal-delay-1 font-display font-800 text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight text-white mb-6">
+        Turning Ideas<br>into <span class="neon-text">Cinematic</span><br>Reality
+      </h1>
+      <p class="reveal reveal-delay-2 text-base md:text-lg text-zinc-400 font-light max-w-xl mx-auto mb-10 leading-relaxed">
+        Crafting visually stunning edits that captivate audiences and elevate brands through powerful storytelling.
+      </p>
+      <div class="reveal reveal-delay-3 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#portfolio" class="group px-8 py-4 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-semibold text-sm tracking-wide hover:shadow-[0_0_40px_rgba(139,92,246,0.4)] transition-all duration-300 flex items-center gap-2">
+          View My Work
+          <iconify-icon icon="lucide:arrow-right" class="transition-transform group-hover:translate-x-1"></iconify-icon>
+        </a>
+        <a href="#contact" class="px-8 py-4 rounded-full border border-white/15 text-white font-semibold text-sm tracking-wide hover:border-neon-purple/50 hover:bg-neon-purple/10 transition-all duration-300">
+          Hire Me
+        </a>
+      </div>
+
+   
+  </section>
+
+  <!-- ==================== MARQUEE ==================== -->
+  <div class="relative z-[2] py-6 border-y border-white/5 overflow-hidden">
+    <div class="flex whitespace-nowrap marquee-track" style="width: max-content;">
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">Premiere Pro</span>
+      <span class="mx-4 text-neon-purple">✦</span>
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">After Effects</span>
+      <span class="mx-4 text-neon-blue">✦</span>
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">DaVinci Resolve</span>
+      <span class="mx-4 text-neon-purple">✦</span>
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">Color Grading</span>
+      <span class="mx-4 text-neon-blue">✦</span>
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">Motion Graphics</span>
+      <span class="mx-4 text-neon-purple">✦</span>
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">Sound Design</span>
+      <span class="mx-4 text-neon-blue">✦</span>
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">Cinematic Edits</span>
+      <span class="mx-4 text-neon-purple">✦</span>
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">Premiere Pro</span>
+      <span class="mx-4 text-neon-purple">✦</span>
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">After Effects</span>
+      <span class="mx-4 text-neon-blue">✦</span>
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">DaVinci Resolve</span>
+      <span class="mx-4 text-neon-purple">✦</span>
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">Color Grading</span>
+      <span class="mx-4 text-neon-blue">✦</span>
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">Motion Graphics</span>
+      <span class="mx-4 text-neon-purple">✦</span>
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">Sound Design</span>
+      <span class="mx-4 text-neon-blue">✦</span>
+      <span class="mx-8 text-sm font-display font-600 text-zinc-600 tracking-widest uppercase">Cinematic Edits</span>
+      <span class="mx-4 text-neon-purple">✦</span>
+    </div>
+  </div>
+
+  <!-- ==================== ABOUT ==================== -->
+  <section id="about" class="relative z-[2] py-24 md:py-32">
+    <div class="orb w-[300px] h-[300px] bg-neon-purple top-0 right-0 z-0" style="opacity:0.05"></div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <!-- Image -->
+        <div class="reveal">
+          <div class="relative">
+            <div class="aspect-[4/5] rounded-2xl overflow-hidden neon-border">
+              <img src="image.png" alt="Nitesh kakde" class="w-full h-full object-cover opacity-90">
+            </div>
+            <!-- Floating Stats Card -->
+            <div class="absolute -bottom-6 -right-6 glass-strong rounded-2xl p-5 neon-glow">
+              <div class="flex items-center gap-4">
+                <div class="text-center">
+                  <p class="stat-number font-display font-800 text-2xl neon-text" data-target="5">0</p>
+                  <p class="text-[10px] tracking-wider uppercase text-zinc-400 mt-0.5">Years</p>
+                </div>
+                <div class="w-px h-10 bg-white/10"></div>
+                <div class="text-center">
+                  <p class="stat-number font-display font-800 text-2xl neon-text" data-target="200">0</p>
+                  <p class="text-[10px] tracking-wider uppercase text-zinc-400 mt-0.5">Projects</p>
+                </div>
+                <div class="w-px h-10 bg-white/10"></div>
+                <div class="text-center">
+                  <p class="stat-number font-display font-800 text-2xl neon-text" data-target="50">0</p>
+                  <p class="text-[10px] tracking-wider uppercase text-zinc-400 mt-0.5">Clients</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div>
+          <p class="reveal text-xs font-semibold tracking-[0.25em] uppercase text-neon-purple mb-4">About Me</p>
+          <h2 class="reveal reveal-delay-1 font-display font-700 text-3xl md:text-4xl lg:text-5xl text-white leading-tight tracking-tight mb-6">
+            I craft stories<br>through <span class="neon-text">visuals</span>
+          </h2>
+          <p class="reveal reveal-delay-2 text-zinc-400 font-light leading-relaxed mb-6">
+            I'm Nitesh Kakde — a professional video editor with 5+ years of experience transforming raw footage into compelling visual narratives. I specialize in cinematic storytelling, social media content, and commercial video production.
+          </p>
+          <p class="reveal reveal-delay-3 text-zinc-400 font-light leading-relaxed mb-8">
+            From YouTube creators to global brands, I've helped clients amplify their message through precise editing, dynamic motion graphics, and professional color grading. Every frame matters — and I make each one count.
+          </p>
+
+          <!-- Skills -->
+          <div class="reveal reveal-delay-4 space-y-5">
+            <div>
+              <div class="flex justify-between mb-2"><span class="text-sm font-medium text-zinc-300">Adobe Premiere Pro</span><span class="text-xs text-neon-purple">95%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="--skill-level:95%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-2"><span class="text-sm font-medium text-zinc-300">After Effects</span><span class="text-xs text-neon-purple">95%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="--skill-level:95%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-2"><span class="text-sm font-medium text-zinc-300">DaVinci Resolve</span><span class="text-xs text-neon-purple">80%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="--skill-level:80%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-2"><span class="text-sm font-medium text-zinc-300">Color Grading</span><span class="text-xs text-neon-purple">90%</span></div>
+              <div class="skill-bar"><div class="skill-fill" style="--skill-level:90%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="line-glow max-w-7xl mx-auto"></div>
+
+  <!-- ==================== PORTFOLIO ==================== -->
+  <section id="portfolio" class="relative z-[2] py-24 md:py-32">
+    <div class="orb w-[400px] h-[400px] bg-neon-blue bottom-20 left-[-10%] z-0" style="opacity:0.05"></div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <p class="reveal text-xs font-semibold tracking-[0.25em] uppercase text-neon-purple mb-4">Portfolio</p>
+        <h2 class="reveal reveal-delay-1 font-display font-700 text-3xl md:text-4xl lg:text-5xl text-white tracking-tight">
+          Selected <span class="neon-text">Works</span>
+        </h2>
+      </div>
+
+      <!-- Filters -->
+      <div class="reveal reveal-delay-2 flex flex-wrap justify-center gap-3 mb-12">
+        <button class="filter-btn active" data-filter="all">Work</button>
+
+      <!-- Grid -->
+      <div class="portfolio-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="portfolioGrid">
+        <!-- Item 1 -->
+        <div class="portfolio-item reveal reveal-delay-1" data-category="cinematic" onclick="openModal(0)">
+          <div class="custom-video">
+            <video src="vid1.mp4"  autoplay muted loop playsinline class="w-full" ></video>
+          </div>
+          <div class="play-btn"><iconify-icon icon="lucide:play" width="22" class="text-white ml-0.5"></iconify-icon></div>
+          <div class="portfolio-overlay">
+            <span class="text-[10px] tracking-widest uppercase text-neon-purple font-semibold">work</span>
+            <h3 class="font-display font-700 text-lg text-white mt-1">Neon Nights</h3>
+            <p class="text-xs text-zinc-400 mt-1">motion-graphics • 4K • animation</p>
+          </div>
+        </div>
+        <!-- Item 2 -->
+        <div class="portfolio-item reveal reveal-delay-2" data-category="reels" onclick="openModal(1)">
+          <div class="custom-video">
+            <video src="vid2.mp4"  autoplay muted loop playsinline class="w-full" ></video>
+          </div>
+          <div class="play-btn"><iconify-icon icon="lucide:play" width="22" class="text-white ml-0.5"></iconify-icon></div>
+          <div class="portfolio-overlay">
+            <span class="text-[10px] tracking-widest uppercase text-neon-blue font-semibold">work</span>
+            <h3 class="font-display font-700 text-lg text-white mt-1">Viral Transition Pack</h3>
+            <p class="text-xs text-zinc-400 mt-1">Instagram Reel • 2M+ Views</p>
+          </div>
+        </div>
+        <!-- Item 3 -->
+        <div class="portfolio-item reveal reveal-delay-3" data-category="youtube" onclick="openModal(2)">
+          <div class="custom-video">
+           <video src="vid3.mp4"  autoplay muted loop playsinline class="w-full" ></video>
+          </div>
+          <div class="play-btn"><iconify-icon icon="lucide:play" width="22" class="text-white ml-0.5"></iconify-icon></div>
+          <div class="portfolio-overlay">
+            <span class="text-[10px] tracking-widest uppercase text-neon-purple font-semibold">work</span>
+            <h3 class="font-display font-700 text-lg text-white mt-1">Motion Graphics</h3>
+            <p class="text-xs text-zinc-400 mt-1">Documentary • 25min • 500K Views</p>
+          </div>
+        </div>
+        <!-- Item 4 -->
+        <div class="portfolio-item reveal reveal-delay-1" data-category="ads" onclick="openModal(3)">
+          <div class="custom-video">
+           <video src="vid4.mp4"  autoplay muted loop playsinline class="w-full" ></video>
+          </div>
+          <div class="play-btn"><iconify-icon icon="lucide:play" width="22" class="text-white ml-0.5"></iconify-icon></div>
+          <div class="portfolio-overlay">
+            <span class="text-[10px] tracking-widest uppercase text-neon-blue font-semibold">work</span>
+            <h3 class="font-display font-700 text-lg text-white mt-1"> viral reel</h3>
+            <p class="text-xs text-zinc-400 mt-1">Commercial • 30sec • 4K</p>
+          </div>
+        </div>
+        <!-- Item 5 -->
+        <div class="portfolio-item reveal reveal-delay-2" data-category="cinematic" onclick="openModal(4)">
+          <div class="custom-video">
+            <video src="vid5.mp4"  autoplay muted loop playsinline class="w-full" ></video>
+          </div>
+          <div class="play-btn"><iconify-icon icon="lucide:play" width="22" class="text-white ml-0.5"></iconify-icon></div>
+          <div class="portfolio-overlay">
+            <span class="text-[10px] tracking-widest uppercase text-neon-purple font-semibold">work</span>
+            <h3 class="font-display font-700 text-lg text-white mt-1">Millions views</h3>
+            <p class="text-xs text-zinc-400 mt-1">instagram viral • reel • animation</p>
+          </div>
+        </div>
+        <!-- Item 6 -->
+        <div class="portfolio-item reveal reveal-delay-3" data-category="reels" onclick="openModal(5)">
+          <div class="custom-video">
+            <video src="vid6.mp4"  autoplay muted loop playsinline class="w-full" ></video>
+          </div>
+          <div class="play-btn"><iconify-icon icon="lucide:play" width="22" class="text-white ml-0.5"></iconify-icon></div>
+          <div class="portfolio-overlay">
+            <span class="text-[10px] tracking-widest uppercase text-neon-blue font-semibold">work</span>
+            <h3 class="font-display font-700 text-lg text-white mt-1">Medical Reel</h3>
+            <p class="text-xs text-zinc-400 mt-1">Instagram • Motion Graphics</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="line-glow max-w-7xl mx-auto"></div>
+
+  <!-- ==================== SERVICES ==================== -->
+  <section id="services" class="relative z-[2] py-24 md:py-32">
+    <div class="orb w-[350px] h-[350px] bg-neon-purple top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0" style="opacity:0.04"></div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <p class="reveal text-xs font-semibold tracking-[0.25em] uppercase text-neon-purple mb-4">Services</p>
+        <h2 class="reveal reveal-delay-1 font-display font-700 text-3xl md:text-4xl lg:text-5xl text-white tracking-tight">
+          What I <span class="neon-text">Offer</span>
+        </h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Service 1 -->
+        <div class="reveal reveal-delay-1 service-card glass rounded-2xl p-7 group">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-neon-purple/20 to-neon-blue/20 flex items-center justify-center mb-5 group-hover:shadow-[0_0_25px_rgba(139,92,246,0.3)] transition-shadow">
+            <iconify-icon icon="lucide:film" width="22" class="text-neon-purple"></iconify-icon>
+          </div>
+          <h3 class="font-display font-700 text-lg text-white mb-3">Video Editing</h3>
+          <p class="text-sm text-zinc-400 font-light leading-relaxed mb-4">Professional cuts for YouTube, documentaries, vlogs, and branded content with seamless pacing.Below cost is for 8 min video</p>
+          <div class="flex items-center gap-2 text-xs font-semibold text-neon-purple">
+            <span>From $15</span>
+            <iconify-icon icon="lucide:arrow-right" width="14"></iconify-icon>
+          </div>
+        </div>
+        <!-- Service 2 -->
+        <div class="reveal reveal-delay-2 service-card glass rounded-2xl p-7 group">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-neon-blue/20 to-neon-cyan/20 flex items-center justify-center mb-5 group-hover:shadow-[0_0_25px_rgba(59,130,246,0.3)] transition-shadow">
+            <iconify-icon icon="lucide:sparkles" width="22" class="text-neon-blue"></iconify-icon>
+          </div>
+          <h3 class="font-display font-700 text-lg text-white mb-3">Motion Graphics</h3>
+          <p class="text-sm text-zinc-400 font-light leading-relaxed mb-4">Eye-catching animations, lower thirds, intros, and dynamic text effects using After Effects. cost per min</p>
+          <div class="flex items-center gap-2 text-xs font-semibold text-neon-blue">
+            <span>From $10</span>
+            <iconify-icon icon="lucide:arrow-right" width="14"></iconify-icon>
+          </div>
+        </div>
+        <!-- Service 3 -->
+        <div class="reveal reveal-delay-3 service-card glass rounded-2xl p-7 group">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-neon-pink/20 to-neon-purple/20 flex items-center justify-center mb-5 group-hover:shadow-[0_0_25px_rgba(168,85,247,0.3)] transition-shadow">
+            <iconify-icon icon="lucide:palette" width="22" class="text-neon-pink"></iconify-icon>
+          </div>
+          <h3 class="font-display font-700 text-lg text-white mb-3">Color Grading</h3>
+          <p class="text-sm text-zinc-400 font-light leading-relaxed mb-4">Cinematic color correction and grading in DaVinci Resolve to set the perfect mood and tone.</p>
+          <div class="flex items-center gap-2 text-xs font-semibold text-neon-pink">
+            <span>From $5</span>
+            <iconify-icon icon="lucide:arrow-right" width="14"></iconify-icon>
+          </div>
+        </div>
+        <!-- Service 4 -->
+        <div class="reveal reveal-delay-4 service-card glass rounded-2xl p-7 group">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-neon-cyan/20 to-neon-blue/20 flex items-center justify-center mb-5 group-hover:shadow-[0_0_25px_rgba(6,182,212,0.3)] transition-shadow">
+            <iconify-icon icon="lucide:smartphone" width="22" class="text-neon-cyan"></iconify-icon>
+          </div>
+          <h3 class="font-display font-700 text-lg text-white mb-3">Social Content</h3>
+          <p class="text-sm text-zinc-400 font-light leading-relaxed mb-4">Scroll-stopping reels, TikToks, and shorts optimized for engagement and platform algorithms.</p>
+          <div class="flex items-center gap-2 text-xs font-semibold text-neon-cyan">
+            <span>From $10</span>
+            <iconify-icon icon="lucide:arrow-right" width="14"></iconify-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="line-glow max-w-7xl mx-auto"></div>
+
+  <!-- ==================== TESTIMONIALS ==================== -->
+  <section id="testimonials" class="relative z-[2] py-24 md:py-32">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <p class="reveal text-xs font-semibold tracking-[0.25em] uppercase text-neon-purple mb-4">Testimonials</p>
+        <h2 class="reveal reveal-delay-1 font-display font-700 text-3xl md:text-4xl lg:text-5xl text-white tracking-tight">
+          Client <span class="neon-text">Reviews</span>
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Testimonial 1 -->
+        <div class="reveal reveal-delay-1 testimonial-card glass rounded-2xl p-7 border border-transparent">
+          <div class="flex gap-1 mb-5">
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+          </div>
+          <p class="text-sm text-zinc-300 font-light leading-relaxed mb-6">"Nitesh completely transformed our raw footage into a cinematic masterpiece. The color grading alone took our brand film to another level. Truly world-class work."</p>
+          <div class="flex items-center gap-3">
+            <img src="https://picsum.photos/seed/client-sarah/80/80.jpg" alt="Sarah Mitchell" class="w-10 h-10 rounded-full object-cover">
+            <div>
+              <p class="text-sm font-semibold text-white">Prajakta shelke</p>
+              <p class="text-xs text-zinc-500"></p>
+            </div>
+          </div>
+        </div>
+        <!-- Testimonial 2 -->
+        <div class="reveal reveal-delay-2 testimonial-card glass rounded-2xl p-7 border border-transparent">
+          <div class="flex gap-1 mb-5">
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+          </div>
+          <p class="text-sm text-zinc-300 font-light leading-relaxed mb-6">"My YouTube channel went from 10K to 100K subscribers after Alex started editing my videos. The pacing, the graphics, the retention — everything improved dramatically."</p>
+          <div class="flex items-center gap-3">
+            <img src="dranand.jpg" alt="Dr.Anand Naik" class="w-10 h-10 rounded-full object-cover">
+            <div>
+              <p class="text-sm font-semibold text-white">Dr.Anand Naik</p>
+              <p class="text-xs text-zinc-500"></p>
+            </div>
+          </div>
+        </div>
+        <!-- Testimonial 3 -->
+        <div class="reveal reveal-delay-3 testimonial-card glass rounded-2xl p-7 border border-transparent">
+          <div class="flex gap-1 mb-5">
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+            <iconify-icon icon="lucide:star" width="16" class="text-yellow-400" style="fill:currentColor"></iconify-icon>
+          </div>
+          <p class="text-sm text-zinc-300 font-light leading-relaxed mb-6">"We hired Nitesh for our product launch campaign — 5 reels and a hero video. Every single piece exceeded expectations. Fast turnaround, zero revisions needed."</p>
+          <div class="flex items-center gap-3">
+            <img src="https://picsum.photos/seed/client-priya/80/80.jpg" alt="Priya Sharma" class="w-10 h-10 rounded-full object-cover">
+            <div>
+              <p class="text-sm font-semibold text-white">Priya Sharma</p>
+              <p class="text-xs text-zinc-500"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="line-glow max-w-7xl mx-auto"></div>
+
+  <!-- ==================== CONTACT ==================== -->
+  <section id="contact" class="relative z-[2] py-24 md:py-32">
+    <div class="orb w-[400px] h-[400px] bg-neon-blue top-0 right-[-10%] z-0" style="opacity:0.05"></div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 lg:gap-24">
+        <!-- Left -->
+        <div>
+          <p class="reveal text-xs font-semibold tracking-[0.25em] uppercase text-neon-purple mb-4">Get In Touch</p>
+          <h2 class="reveal reveal-delay-1 font-display font-700 text-3xl md:text-4xl lg:text-5xl text-white tracking-tight leading-tight mb-6">
+            Let's create<br>something <span class="neon-text">epic</span>
+          </h2>
+          <p class="reveal reveal-delay-2 text-zinc-400 font-light leading-relaxed mb-10">
+            Have a project in mind? I'd love to hear about it. Drop me a message and I'll get back to you within 24 hours.
+          </p>
+
+          <div class="reveal reveal-delay-3 space-y-6">
+            <a href="mailto:hello@alexrivera.com" class="flex items-center gap-4 group">
+              <div class="w-12 h-12 rounded-xl glass flex items-center justify-center group-hover:neon-glow transition-shadow">
+                <iconify-icon icon="lucide:mail" width="20" class="text-neon-purple"></iconify-icon>
+              </div>
+              <div>
+                <p class="text-xs text-zinc-500 mb-0.5">Email</p>
+                <p class="text-sm font-medium text-white group-hover:text-neon-purple transition-colors">niteshkakde27@gmail.com</p>
+              </div>
+            </a>
+            <a href="#" class="flex items-center gap-4 group">
+              <div class="w-12 h-12 rounded-xl glass flex items-center justify-center group-hover:neon-glow transition-shadow">
+                <iconify-icon icon="lucide:instagram" width="20" class="text-neon-purple"></iconify-icon>
+              </div>
+              <div>
+                <p class="text-xs text-zinc-500 mb-0.5">Instagram</p>
+                <p class="text-sm font-medium text-white group-hover:text-neon-purple transition-colors">@niteshkakde27</p>
+              </div>
+            </a>
+            <a href="#" class="flex items-center gap-4 group">
+              <div class="w-12 h-12 rounded-xl glass flex items-center justify-center group-hover:neon-glow transition-shadow">
+                <iconify-icon icon="lucide:youtube" width="20" class="text-neon-purple"></iconify-icon>
+              </div>
+              <div>
+                <p class="text-xs text-zinc-500 mb-0.5">YouTube</p>
+                <p class="text-sm font-medium text-white group-hover:text-neon-purple transition-colors">niteeesh</p>
+              </div>
+            </a>
+            <a href="#" class="flex items-center gap-4 group">
+              <div class="w-12 h-12 rounded-xl glass flex items-center justify-center group-hover:neon-glow transition-shadow">
+                <iconify-icon icon="lucide:linkedin" width="20" class="text-neon-purple"></iconify-icon>
+              </div>
+              <div>
+                <p class="text-xs text-zinc-500 mb-0.5">LinkedIn</p>
+                <p class="text-sm font-medium text-white group-hover:text-neon-purple transition-colors">Nitesh Kakde</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right - Form -->
+        <div class="reveal reveal-delay-2">
+         <form id="contactForm" action="https://formspree.io/f/xlgadepl" method="POST">
+            <div>
+              <label class="block text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2">Your Name</label>
+              <input type="text" name="name" required placeholder="nitesh kakde" class="w-full px-4 py-3.5 rounded-xl bg-dark-900/60 border border-white/10 text-white text-sm placeholder:text-zinc-600 transition-all">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2">Email Address</label>
+              <input type="email" name="email" required placeholder="example@example.com" class="w-full px-4 py-3.5 rounded-xl bg-dark-900/60 border border-white/10 text-white text-sm placeholder:text-zinc-600 transition-all">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2">Project Type</label>
+              <select name="project" class="w-full px-4 py-3.5 rounded-xl bg-dark-900/60 border border-white/10 text-white text-sm transition-all appearance-none" style="background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2371717a%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>');background-repeat:no-repeat;background-position:right 1rem center;">
+                <option value="" class="bg-dark-800">Select a service</option>
+                <option value="video-editing" class="bg-dark-800">Video Editing</option>
+                <option value="motion-graphics" class="bg-dark-800">Motion Graphics</option>
+                <option value="color-grading" class="bg-dark-800">Color Grading</option>
+                <option value="social-content" class="bg-dark-800">Social Media Content</option>
+                <option value="full-package" class="bg-dark-800">Full Package</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold tracking-wider uppercase text-zinc-400 mb-2">Message</label>
+              <textarea name="message" rows="4" required placeholder="Tell me about your project..." class="w-full px-4 py-3.5 rounded-xl bg-dark-900/60 border border-white/10 text-white text-sm placeholder:text-zinc-600 transition-all resize-none"></textarea>
+            </div>
+            <button type="submit" id="submitBtn" class="w-full py-4 rounded-xl bg-gradient-to-r from-neon-purple to-neon-blue text-white font-semibold text-sm tracking-wide hover:shadow-[0_0_40px_rgba(139,92,246,0.4)] transition-all duration-300 flex items-center justify-center gap-2">
+              <span id="submitText">Send Message</span>
+              <iconify-icon icon="lucide:send" width="16" id="submitIcon"></iconify-icon>
+              <div id="submitSpinner" class="hidden w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="relative z-[2] border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-3">
+          <span class="font-display font-800 text-xl neon-text">AR.</span>
+          <span class="text-sm text-zinc-500">© 2025 Nitesh kakde. All rights reserved.</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="#hero" class="text-xs text-zinc-500 hover:text-white transition-colors">Home</a>
+          <a href="#about" class="text-xs text-zinc-500 hover:text-white transition-colors">About</a>
+          <a href="#portfolio" class="text-xs text-zinc-500 hover:text-white transition-colors">Work</a>
+          <a href="#services" class="text-xs text-zinc-500 hover:text-white transition-colors">Services</a>
+          <a href="#contact" class="text-xs text-zinc-500 hover:text-white transition-colors">Contact</a>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="https://www.instagram.com/niteshkakde27?igsh=MXZqZWtzMnpycW9obg==" class="w-9 h-9 rounded-full glass flex items-center justify-center text-zinc-400 hover:text-neon-purple hover:neon-glow transition-all"><iconify-icon icon="lucide:instagram" width="16"></iconify-icon></a>
+          <a href="https://youtube.com/@niteeesh_27?si=QGs8MBLiUjAA50PT" class="w-9 h-9 rounded-full glass flex items-center justify-center text-zinc-400 hover:text-neon-purple hover:neon-glow transition-all"><iconify-icon icon="lucide:youtube" width="16"></iconify-icon></a>
+          <a href="https://www.linkedin.com/in/nitesh-kakde-363823341?utm_source=share_via&utm_content=profile&utm_medium=member_android" class="w-9 h-9 rounded-full glass flex items-center justify-center text-zinc-400 hover:text-neon-purple hover:neon-glow transition-all"><iconify-icon icon="lucide:linkedin" width="16"></iconify-icon></a>
+          <a href="#" class="w-9 h-9 rounded-full glass flex items-center justify-center text-zinc-400 hover:text-neon-purple hover:neon-glow transition-all"><iconify-icon icon="lucide:twitter" width="16"></iconify-icon></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== MODAL ==================== -->
+  <div id="modal" onclick="closeModal(event)">
+    <div class="modal-content glass-strong rounded-2xl overflow-hidden" onclick="event.stopPropagation()">
+      <div class="relative">
+        <div class="w-full bg-dark-800 flex items-center justify-center">
+          <video id="modalVideo" controls class="w-full h-full object-cover"></video>
+          </div>
+        </div>
+        <button onclick="closeModalDirect()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-dark-900/80 backdrop-blur-sm flex items-center justify-center text-white hover:bg-dark-900 transition-colors">
+          <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+        </button>
+      </div>
+      <div class="p-8">
+        <span id="modalCategory" class="text-[10px] tracking-widest uppercase text-neon-purple font-semibold"></span>
+        <h3 id="modalTitle" class="font-display font-700 text-2xl text-white mt-2 mb-3"></h3>
+        <p id="modalDesc" class="text-sm text-zinc-400 font-light leading-relaxed mb-6"></p>
+        <div class="flex flex-wrap gap-3">
+          <span id="modalTag1" class="px-3 py-1 rounded-full text-xs font-medium bg-white/5 text-zinc-300 border border-white/10"></span>
+          <span id="modalTag2" class="px-3 py-1 rounded-full text-xs font-medium bg-white/5 text-zinc-300 border border-white/10"></span>
+          <span id="modalTag3" class="px-3 py-1 rounded-full text-xs font-medium bg-white/5 text-zinc-300 border border-white/10"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST ==================== -->
+  <div id="toast" class="toast glass-strong rounded-xl flex items-center gap-3">
+    <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+      <iconify-icon icon="lucide:check" width="16" class="text-green-400"></iconify-icon>
+    </div>
+    <p class="text-sm text-white font-medium">Message sent successfully!</p>
+  </div>
+
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // ===== PROJECT DATA =====
+    const projects = [
+       {
+    title: 'Neon Nights',
+    category: 'Cinematic',
+    video: 'vid1.mp4',
+    desc: 'Your description...',
+    tags: ['Motion Graphics']
+  },
+  {
+    title: 'Viral Transition Pack',
+    category: 'Reels',
+    video: 'vid2.mp4',
+    desc: 'Your description...',
+    tags: ['Instagram']
+  },
+  {
+    title: 'Motion Graphics',
+    category: 'YouTube',
+    video: 'vid3.mp4',
+    desc: 'Your description...',
+    tags: ['Documentary']
+  },
+  {
+    title: 'Viral Reel',
+    category: 'Ads',
+    video: 'vid4.mp4',
+    desc: 'Your description...',
+    tags: ['Commercial']
+  },
+  {
+    title: 'Millions Views',
+    category: 'Cinematic',
+    video: 'vid5.mp4',
+    desc: 'Your description...',
+    tags: ['Reel']
+  },
+  {
+    title: 'Medical Reel',
+    category: 'Reels',
+    video: 'vid6.mp4',
+    desc: 'Your description...',
+    tags: ['Motion Graphics']
+  }
+    ];
+
+    // ===== LOADING SCREEN =====
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+      }, 2200);
+    });
+
+    // ===== CUSTOM CURSOR =====
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      dot.style.left = mouseX - 3 + 'px';
+      dot.style.top = mouseY - 3 + 'px';
+    });
+
+    function animateCursor() {
+      ringX += (mouseX - ringX) * 0.15;
+      ringY += (mouseY - ringY) * 0.15;
+      ring.style.left = ringX - 20 + 'px';
+      ring.style.top = ringY - 20 + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // Hover effect on interactive elements
+    const hoverTargets = document.querySelectorAll('a, button, .portfolio-item, .filter-btn, input, textarea, select');
+    hoverTargets.forEach(el => {
+      el.addEventListener('mouseenter', () => ring.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('hovering'));
+    });
+
+    // ===== NAVBAR SCROLL =====
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      if (currentScroll > 80) {
+        navbar.classList.add('glass');
+        navbar.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+      } else {
+        navbar.classList.remove('glass');
+        navbar.style.borderBottom = 'none';
+      }
+      lastScroll = currentScroll;
+    });
+
+    // ===== ACTIVE NAV LINK =====
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 150;
+        if (window.scrollY >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // ===== MOBILE MENU =====
+    const mobileMenu = document.getElementById('mobileMenu');
+    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+      mobileMenu.style.opacity = '1';
+      mobileMenu.style.visibility = 'visible';
+    });
+    document.getElementById('mobileMenuClose').addEventListener('click', closeMobileMenu);
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', closeMobileMenu);
+    });
+    function closeMobileMenu() {
+      mobileMenu.style.opacity = '0';
+      mobileMenu.style.visibility = 'hidden';
+    }
+
+    // ===== SCROLL REVEAL =====
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Animate skill bars
+          entry.target.querySelectorAll('.skill-fill').forEach(bar => {
+            bar.classList.add('animate');
+          });
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ===== STAT COUNTER =====
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.dataset.target);
+          let current = 0;
+          const increment = target / 60;
+          const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+              current = target;
+              clearInterval(timer);
+            }
+            el.textContent = Math.floor(current) + '+';
+          }, 25);
+          statObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stat-number').forEach(el => statObserver.observe(el));
+
+    // ===== PORTFOLIO FILTER =====
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const portfolioItems = document.querySelectorAll('.portfolio-item');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+
+        portfolioItems.forEach(item => {
+          if (filter === 'all' || item.dataset.category === filter) {
+            item.style.display = 'block';
+            item.style.opacity = '0';
+            item.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+              item.style.transition = 'opacity 0.4s, transform 0.4s';
+              item.style.opacity = '1';
+              item.style.transform = 'scale(1)';
+            }, 50);
+          } else {
+            item.style.opacity = '0';
+            item.style.transform = 'scale(0.95)';
+            setTimeout(() => { item.style.display = 'none'; }, 400);
+          }
+        });
+      });
+    });
+
+    // ===== MODAL =====
+    const modal = document.getElementById('modal');
+   function openModal(index) {
+ const video = document.getElementById("modalVideo");
+
+  video.src = projects[index].video;
+  video.muted = false; // 🔥 SOUND ON
+  video.play();
+
+  modal.classList.add("open");
+}
+    
+    function closeModalDirect() {
+  const modal = document.getElementById("modal");
+  const video = document.getElementById("modalVideo");
+
+  modal.classList.remove("open");
+  video.pause();
+  video.currentTime = 0;
+}
+  
+
+    // ===== CONTACT FORM =====
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitIcon = document.getElementById('submitIcon');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const toast = document.getElementById('toast');
+
+ 
+
+    // ===== MUSIC TOGGLE =====
+    let musicPlaying = false;
+    const musicBtn = document.getElementById('musicBtn');
+    const musicBars = document.getElementById('musicBars');
+    musicBtn.addEventListener('click', () => {
+      musicPlaying = !musicPlaying;
+      if (musicPlaying) {
+        musicBars.classList.add('music-playing');
+        musicBtn.style.boxShadow = '0 0 20px rgba(139,92,246,0.4)';
+      } else {
+        musicBars.classList.remove('music-playing');
+        musicBtn.style.boxShadow = '';
+      }
+    });
+
+    // ===== HERO CANVAS ANIMATION =====
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let canvasW, canvasH;
+
+    function resizeCanvas() {
+      canvasW = canvas.width = canvas.offsetWidth;
+      canvasH = canvas.height = canvas.offsetHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * canvasW;
+        this.y = Math.random() * canvasH;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.opacity = Math.random() * 0.5 + 0.1;
+        this.hue = Math.random() > 0.5 ? 260 : 220; // purple or blue
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvasW || this.y < 0 || this.y > canvasH) {
+          this.reset();
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 70%, 60%, ${this.opacity})`;
+        ctx.fill();
+      }
+    }
+
+    // Create particles
+    for (let i = 0; i < 80; i++) {
+      particles.push(new Particle());
+    }
+
+    // Floating light orbs
+    const orbs = [];
+    for (let i = 0; i < 3; i++) {
+      orbs.push({
+        x: Math.random() * canvasW,
+        y: Math.random() * canvasH,
+        radius: Math.random() * 200 + 100,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5,
+        hue: i === 0 ? 260 : i === 1 ? 220 : 280
+      });
+    }
+
+    function animateCanvas() {
+      ctx.fillStyle = 'rgba(10, 10, 15, 0.15)';
+      ctx.fillRect(0, 0, canvasW, canvasH);
+
+      // Draw orbs (large blurred circles)
+      orbs.forEach(orb => {
+        orb.x += orb.speedX;
+        orb.y += orb.speedY;
+        if (orb.x < -orb.radius) orb.x = canvasW + orb.radius;
+        if (orb.x > canvasW + orb.radius) orb.x = -orb.radius;
+        if (orb.y < -orb.radius) orb.y = canvasH + orb.radius;
+        if (orb.y > canvasH + orb.radius) orb.y = -orb.radius;
+
+        const gradient = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.radius);
+        gradient.addColorStop(0, `hsla(${orb.hue}, 70%, 50%, 0.08)`);
+        gradient.addColorStop(0.5, `hsla(${orb.hue}, 70%, 40%, 0.03)`);
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(orb.x - orb.radius, orb.y - orb.radius, orb.radius * 2, orb.radius * 2);
+      });
+
+      // Draw and connect particles
+      particles.forEach((p, i) => {
+        p.update();
+        p.draw();
+
+        // Connect nearby particles
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = p.x - particles[j].x;
+          const dy = p.y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `hsla(260, 60%, 60%, ${0.06 * (1 - dist / 120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      });
+
+      requestAnimationFrame(animateCanvas);
+    }
+    animateCanvas();
+  </script>
+
+</body>
+</html>
